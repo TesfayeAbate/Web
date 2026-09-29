@@ -1,1481 +1,415 @@
 <!DOCTYPE html>
-<html lang="en" class="dark scroll-smooth">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura Luxury Estates | Online House Agent Platform</title>
-
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        gold: {
-                            400: '#facc15',
-                            500: '#eab308',
-                            600: '#ca8a04',
-                        },
-                        amber: {
-                            500: '#f59e0b',
-                            600: '#d97706',
-                        },
-                        luxury: {
-                            dark: '#0B0F17',
-                            card: '#131B2A',
-                            accent: '#FFB800',
-                            glow: '#3B82F6',
-                            surface: '#1E293B'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif']
-                    }
-                }
-            }
-        }
-    </script>
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
-
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Three.js Library for 3D Architectural Scene -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0B0F17;
-            color: #f3f4f6;
-            overflow-x: hidden;
-        }
-
-        .font-serif {
-            font-family: 'Playfair Display', serif;
-        }
-
-        /* Glassmorphism effects */
-        .glass-panel {
-            background: rgba(19, 27, 42, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .glass-panel-light {
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Custom glow effects matching reference photo ambient exterior lighting */
-        .glow-warm {
-            box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.35);
-        }
-
-        .glow-accent {
-            box-shadow: 0 0 30px -5px rgba(59, 130, 246, 0.3);
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0B0F17;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1E293B;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #334155;
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, #FFFFFF 30%, #94A3B8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .gradient-gold {
-            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* Canvas styling */
-        #canvas3d {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        .modal-active {
-            overflow: hidden;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aura Real Estate | የቤት ወኪል</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Noto+Sans+Ethiopic:wght@400;600;700&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Ethiopic', sans-serif;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.90);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(229, 231, 235, 0.8);
+    }
+  </style>
 </head>
-<body class="relative min-h-screen text-slate-100 selection:bg-amber-500 selection:text-black">
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
 
-    <!-- Navigation Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glass-panel border-b border-slate-800/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            
-            <!-- Brand Logo -->
-            <a href="#" class="flex items-center space-x-3 group">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center text-slate-950 font-bold text-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
-                    <i class="fa-solid font-bold fa-house-laptop"></i>
-                </div>
-                <div>
-                    <span class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-white block leading-none">AURA</span>
-                    <span class="text-[10px] tracking-widest text-amber-400 font-semibold uppercase">Online House Agent</span>
-                </div>
-            </a>
+  <!-- TOP COMMISSION NOTICE BANNER -->
+  <div class="bg-amber-600 text-white text-xs md:text-sm py-2 px-4 text-center font-medium shadow-inner flex items-center justify-center gap-2">
+    <i class="fa-solid fa-handshake-angle text-amber-200"></i>
+    <span id="banner-notice">Agent Fee Notice: A 3% – 5% commission applies to all completed sales and rental agreements (Negotiable).</span>
+  </div>
 
-            <!-- Desktop Navigation Links -->
-            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
-                <a href="#hero" class="text-white hover:text-amber-400 transition-colors">3D Showcase</a>
-                <a href="#properties" class="text-slate-300 hover:text-amber-400 transition-colors">Properties Catalog</a>
-                <a href="#how-it-works" class="text-slate-300 hover:text-amber-400 transition-colors">How It Works</a>
-                <a href="#about-agent" class="text-slate-300 hover:text-amber-400 transition-colors">About Agent</a>
-            </nav>
-
-            <!-- Action Buttons -->
-            <div class="flex items-center space-x-3 sm:space-x-4">
-                <!-- Seller Upload Button -->
-                <button onclick="openSellerModal()" class="px-3 sm:px-4 py-2.5 rounded-xl border border-amber-500/50 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs sm:text-sm font-semibold flex items-center space-x-2 transition-all hover:border-amber-400">
-                    <i class="fa-solid fa-cloud-arrow-up"></i>
-                    <span class="hidden sm:inline">Sell Property</span>
-                    <span class="sm:hidden">Sell</span>
-                </button>
-
-                <!-- Direct Agent Contact CTA -->
-                <a href="https://wa.me/251931935716?text=Hello%20Agent,%20I%20am%20looking%20to%20buy/rent%20a%20property." target="_blank" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs sm:text-sm font-bold flex items-center space-x-2 transition-all shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transform hover:-translate-y-0.5">
-                    <i class="fa-brands fa-whatsapp text-lg"></i>
-                    <span class="hidden md:inline">Contact Agent</span>
-                </a>
-
-                <!-- Mobile Menu Button -->
-                <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
-                    <i class="fa-solid fa-bars text-xl" id="menuIcon"></i>
-                </button>
-            </div>
+  <!-- HEADER & NAVIGATION -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- LOGO WITH HOUSE VECTOR -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-12 h-12 bg-emerald-700 rounded-xl flex items-center justify-center shadow-md shadow-emerald-900/20 group-hover:bg-emerald-800 transition">
+          <svg class="w-7 h-7 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 21h18M3 10l9-7 9 7v11a1 1 1 0 0 1-1 1H4a1 1 1 0 0 1-1-1V10z"/>
+            <path d="M9 21V12h6v9" fill="currentColor" class="text-emerald-700"/>
+            <circle cx="12" cy="7" r="1" fill="currentColor"/>
+          </svg>
         </div>
-
-        <!-- Mobile Menu Dropdown -->
-        <div id="mobileMenu" class="hidden md:hidden glass-panel border-t border-slate-800 px-4 pt-4 pb-6 space-y-3">
-            <a href="#hero" onclick="toggleMobileMenu()" class="block py-2 text-slate-200 hover:text-amber-400 font-medium">3D Showcase</a>
-            <a href="#properties" onclick="toggleMobileMenu()" class="block py-2 text-slate-200 hover:text-amber-400 font-medium">Properties Catalog</a>
-            <a href="#how-it-works" onclick="toggleMobileMenu()" class="block py-2 text-slate-200 hover:text-amber-400 font-medium">How It Works</a>
-            <a href="#about-agent" onclick="toggleMobileMenu()" class="block py-2 text-slate-200 hover:text-amber-400 font-medium">About Agent</a>
-            <div class="pt-2 border-t border-slate-800/80 flex flex-col space-y-2">
-                <button onclick="toggleMobileMenu(); openSellerModal();" class="w-full py-2.5 rounded-xl bg-slate-800 text-amber-400 font-semibold text-center border border-amber-500/30">
-                    <i class="fa-solid fa-plus-circle mr-2"></i> Submit Property as Seller
-                </button>
-            </div>
+        <div>
+          <span class="text-xl font-bold tracking-tight text-slate-900 block leading-tight">AURA <span class="text-emerald-700">ESTATES</span></span>
+          <span class="text-xs text-slate-500 font-medium" id="sub-logo">Real Estate & Housing Agent</span>
         </div>
-    </header>
+      </a>
 
-    <!-- HERO SECTION WITH INTERACTIVE 3D VILLA & QUICK SEARCH -->
-    <section id="hero" class="relative pt-24 pb-12 min-h-screen flex flex-col justify-between overflow-hidden">
-        
-        <!-- Background Ambient Lights -->
-        <div class="absolute top-1/4 left-10 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute bottom-10 right-10 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+      <!-- NAVIGATION & LANGUAGE TOGGLE -->
+      <div class="flex items-center gap-4">
+        <nav class="hidden md:flex items-center gap-6 font-medium text-sm text-slate-600">
+          <button onclick="setTab('buy')" class="hover:text-emerald-700 transition" id="nav-buy">Buy</button>
+          <button onclick="setTab('rent')" class="hover:text-emerald-700 transition" id="nav-rent">Rent</button>
+          <button onclick="setTab('sell')" class="hover:text-emerald-700 transition" id="nav-sell">Sell Property</button>
+        </nav>
 
-        <!-- Hero Content Grid -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-6 pb-6 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center z-10">
-            
-            <!-- Hero Text Header -->
-            <div class="lg:col-span-5 space-y-6">
-                <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold uppercase tracking-wider">
-                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-                    <span>Direct Intermediary Real Estate Service</span>
-                </div>
-
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-white tracking-tight leading-tight">
-                    Architectural Excellence. <br>
-                    <span class="gradient-gold">Seamless Connection.</span>
-                </h1>
-
-                <p class="text-slate-300 text-base sm:text-lg font-light leading-relaxed">
-                    Connecting premium property sellers directly with verified home buyers. Experience luxury homes in 3D interactive renders or video walkthroughs before arranging direct agent viewings.
-                </p>
-
-                <!-- Quick Stats Badge Row -->
-                <div class="grid grid-cols-3 gap-4 pt-2 border-t border-slate-800/80">
-                    <div>
-                        <p class="text-2xl font-bold text-white font-serif">100%</p>
-                        <p class="text-xs text-slate-400">Verified Listings</p>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-bold text-amber-400 font-serif">Direct</p>
-                        <p class="text-xs text-slate-400">Agent Concierge</p>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-bold text-white font-serif">0%</p>
-                        <p class="text-xs text-slate-400">Buyer Direct Fees</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 3D Interactive Container -->
-            <div class="lg:col-span-7 h-[380px] sm:h-[480px] lg:h-[500px] w-full rounded-3xl relative glass-panel overflow-hidden border border-slate-700/50 shadow-2xl group">
-                
-                <!-- Canvas 3D element -->
-                <div id="canvas-container" class="w-full h-full cursor-grab active:cursor-grabbing">
-                    <canvas id="canvas3d"></canvas>
-                </div>
-
-                <!-- 3D Overlay Interactive Controls -->
-                <div class="absolute top-4 left-4 z-20 flex flex-wrap gap-2">
-                    <button id="toggleLightsBtn" onclick="toggle3DLights()" class="px-3 py-1.5 rounded-lg glass-panel-light text-xs font-medium text-amber-300 hover:bg-slate-800 flex items-center space-x-1.5 transition">
-                        <i class="fa-solid fa-lightbulb"></i>
-                        <span id="lightStatusText">Lighting: Twilight Glow</span>
-                    </button>
-                    <button onclick="reset3DCamera()" class="px-3 py-1.5 rounded-lg glass-panel-light text-xs font-medium text-slate-200 hover:bg-slate-800 flex items-center space-x-1.5 transition">
-                        <i class="fa-solid fa-arrows-rotate"></i>
-                        <span>Reset View</span>
-                    </button>
-                </div>
-
-                <div class="absolute bottom-4 right-4 z-20 glass-panel-light px-3 py-1.5 rounded-xl text-xs text-slate-300 flex items-center space-x-2">
-                    <i class="fa-solid fa-hand-pointer text-amber-400 animate-pulse"></i>
-                    <span>Drag to Orbit 3D Villa Model</span>
-                </div>
-
-                <!-- Architectural Accent Badge -->
-                <div class="absolute bottom-4 left-4 z-20 hidden sm:block glass-panel px-4 py-2 rounded-2xl border border-amber-500/20">
-                    <p class="text-[11px] text-amber-400 font-semibold uppercase tracking-wider">Style Reference</p>
-                    <p class="text-xs text-white font-serif font-bold">Ultra-Modern Minimalist Villa</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- PROMINENT HIGH-VISIBILITY SEARCH BAR -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-30 my-6">
-            <div class="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 p-1 rounded-3xl shadow-2xl shadow-amber-500/20">
-                <div class="bg-slate-950 p-5 sm:p-7 rounded-[22px]">
-                    <div class="flex items-center space-x-2 mb-3">
-                        <span class="w-3 h-3 rounded-full bg-amber-400 animate-pulse"></span>
-                        <h3 class="text-amber-400 font-serif font-bold text-base sm:text-lg tracking-wide uppercase">Quick Property Search Filter</h3>
-                    </div>
-
-                    <form id="heroSearchForm" onsubmit="handleHeroSearch(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
-                        
-                        <!-- Mode: Buy or Rent -->
-                        <div class="space-y-1.5">
-                            <label class="text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center">
-                                <i class="fa-solid fa-compass mr-1.5 text-amber-400"></i> Looking To
-                            </label>
-                            <select id="searchIntent" class="w-full bg-slate-900 border-2 border-amber-500/50 text-amber-300 font-semibold rounded-xl px-3.5 py-3 text-sm focus:outline-none focus:border-amber-400">
-                                <option value="buy">Buy Property</option>
-                                <option value="rent">Rent Property</option>
-                            </select>
-                        </div>
-
-                        <!-- Property Type -->
-                        <div class="space-y-1.5">
-                            <label class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center">
-                                <i class="fa-solid fa-building mr-1.5 text-amber-400"></i> Property Type
-                            </label>
-                            <select id="searchType" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-3.5 py-3 text-sm focus:outline-none focus:border-amber-500">
-                                <option value="all">All Types</option>
-                                <option value="villa">Modern Villa</option>
-                                <option value="apartment">Luxury Apartment</option>
-                                <option value="penthouse">Penthouse</option>
-                                <option value="estate">Gated Estate</option>
-                            </select>
-                        </div>
-
-                        <!-- Bedrooms -->
-                        <div class="space-y-1.5">
-                            <label class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center">
-                                <i class="fa-solid fa-bed mr-1.5 text-amber-400"></i> Bedrooms
-                            </label>
-                            <select id="searchBeds" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-3.5 py-3 text-sm focus:outline-none focus:border-amber-500">
-                                <option value="any">Any Bedrooms</option>
-                                <option value="2">2+ Beds</option>
-                                <option value="3">3+ Beds</option>
-                                <option value="4">4+ Beds</option>
-                                <option value="5">5+ Luxury Suites</option>
-                            </select>
-                        </div>
-
-                        <!-- Price Range -->
-                        <div class="space-y-1.5">
-                            <label class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center">
-                                <i class="fa-solid fa-dollar-sign mr-1.5 text-amber-400"></i> Max Budget
-                            </label>
-                            <select id="searchPrice" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-3.5 py-3 text-sm focus:outline-none focus:border-amber-500">
-                                <option value="any">Any Price</option>
-                                <option value="500000">$500,000</option>
-                                <option value="1500000">$1,500,000</option>
-                                <option value="3000000">$3,000,000</option>
-                                <option value="5000000">$5,000,000+</option>
-                            </select>
-                        </div>
-
-                        <!-- Search Button -->
-                        <div class="sm:col-span-2 lg:col-span-1 pt-1">
-                            <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-extrabold text-sm flex items-center justify-center space-x-2 transition shadow-xl shadow-amber-500/30 transform hover:-translate-y-0.5">
-                                <i class="fa-solid fa-magnifying-glass text-base"></i>
-                                <span>Search Homes</span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- PROPERTIES CATALOG SECTION -->
-    <section id="properties" class="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <!-- Section Title Header -->
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-            <div>
-                <span class="text-amber-400 font-semibold text-xs tracking-widest uppercase">Featured Portfolios</span>
-                <h2 class="text-3xl sm:text-4xl font-serif font-bold text-white mt-1">Discover Modern Living</h2>
-                <p class="text-slate-400 text-sm mt-2 max-w-xl">Curated modern architectural villas, executive homes, and luxury estates. Every property is personally vetted by your online agent.</p>
-            </div>
-
-            <!-- Buy / Rent Filter Tabs -->
-            <div class="flex items-center space-x-2 bg-slate-900 p-1.5 rounded-2xl border border-slate-800 self-start md:self-auto">
-                <button onclick="filterType('all')" id="tab-all" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-950 bg-amber-400 transition">All Properties</button>
-                <button onclick="filterType('buy')" id="tab-buy" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition">For Sale</button>
-                <button onclick="filterType('rent')" id="tab-rent" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition">For Rent</button>
-            </div>
-        </div>
-
-        <!-- Property Cards Grid -->
-        <div id="propertyGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Property cards rendered dynamically by JavaScript -->
-        </div>
-    </section>
-
-    <!-- SELLER PORTAL PROMOTIONAL BANNER -->
-    <section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="relative rounded-3xl overflow-hidden glass-panel border border-amber-500/30 p-8 sm:p-12 glow-warm">
-            
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                <div class="lg:col-span-8 space-y-4">
-                    <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 text-xs font-bold uppercase tracking-wider">For Property Sellers</span>
-                    <h2 class="text-3xl sm:text-4xl font-serif font-bold text-white">Selling Your Luxury Property? <br>Let Us Handle the Buyers directly.</h2>
-                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-                        Upload your photos, video tours, and home specifications. As your dedicated online agent, we review your submission, set offline agreement details, and publish your property to active high-net-worth buyers.
-                    </p>
-                    <div class="flex flex-wrap gap-4 pt-2">
-                        <div class="flex items-center space-x-2 text-xs text-slate-300">
-                            <i class="fa-solid fa-circle-check text-amber-400"></i>
-                            <span>Zero Public Contact Exposure</span>
-                        </div>
-                        <div class="flex items-center space-x-2 text-xs text-slate-300">
-                            <i class="fa-solid fa-circle-check text-amber-400"></i>
-                            <span>Verified Agent Intermediary</span>
-                        </div>
-                        <div class="flex items-center space-x-2 text-xs text-slate-300">
-                            <i class="fa-solid fa-circle-check text-amber-400"></i>
-                            <span>Video & Photo Optimization</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="lg:col-span-4 flex justify-start lg:justify-end">
-                    <button onclick="openSellerModal()" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-base shadow-xl shadow-amber-500/25 flex items-center justify-center space-x-3 transition transform hover:-translate-y-1">
-                        <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
-                        <span>Upload Property Details</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- HOW IT WORKS & AGENT ROLE SECTION -->
-    <section id="how-it-works" class="py-20 bg-slate-950/60 border-y border-slate-800/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
-                <span class="text-amber-400 font-semibold text-xs tracking-widest uppercase">Streamlined Process</span>
-                <h2 class="text-3xl sm:text-4xl font-serif font-bold text-white">How Our Agent Model Works</h2>
-                <p class="text-slate-400 text-sm">We operate as the sole verified liaison between sellers and buyers to ensure maximum security, privacy, and smooth transaction management.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                
-                <!-- Step 1 -->
-                <div class="glass-panel p-8 rounded-3xl border border-slate-800 relative hover:border-amber-500/40 transition">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-xl mb-6">
-                        01
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2 font-serif">Sellers Submit Listings</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">
-                        Sellers upload property photos, floorplan videos, and specs via our secure portal. Seller private contact data remains strictly confidential with the agent.
-                    </p>
-                </div>
-
-                <!-- Step 2 -->
-                <div class="glass-panel p-8 rounded-3xl border border-slate-800 relative hover:border-amber-500/40 transition">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-xl mb-6">
-                        02
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2 font-serif">Agent Verification & Audit</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">
-                        We inspect property documentation, format video walkthroughs, finalize commission terms, and publish live to our website catalog.
-                    </p>
-                </div>
-
-                <!-- Step 3 -->
-                <div class="glass-panel p-8 rounded-3xl border border-slate-800 relative hover:border-amber-500/40 transition">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-xl mb-6">
-                        03
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2 font-serif">Direct Buyer Liaison</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">
-                        Buyers click direct WhatsApp, Call, or Form buttons to connect directly with the agent for guided viewings and price negotiation.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ABOUT THE AGENT & CONTACT SECTION -->
-    <section id="about-agent" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            
-            <!-- Agent Bio / Profile Card -->
-            <div class="lg:col-span-5">
-                <div class="glass-panel p-8 rounded-3xl border border-amber-500/20 relative glow-warm">
-                    <div class="flex items-center space-x-4 mb-6">
-                        <div class="w-20 h-20 rounded-2xl overflow-hidden border-2 border-amber-400 shadow-lg">
-                            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80" alt="Senior Agent Profile" class="w-full h-full object-cover">
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-serif font-bold text-white">Alexander Vance</h3>
-                            <p class="text-xs text-amber-400 font-semibold uppercase tracking-wider">Principal Agent & Founder</p>
-                            <p class="text-xs text-slate-400 mt-1"><i class="fa-solid fa-location-dot text-amber-400 mr-1"></i> Prime Metro & Luxury Coastal Regions</p>
-                        </div>
-                    </div>
-
-                    <p class="text-slate-300 text-sm leading-relaxed mb-6">
-                        "My mission is to eliminate the chaos in luxury real estate trading. Sellers get a streamlined, confidential submission portal, while buyers deal directly with one accountable professional."
-                    </p>
-
-                    <!-- Direct Lead Triggers -->
-                    <div class="space-y-3 pt-4 border-t border-slate-800">
-                        <a href="tel:0962916549" class="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm flex items-center justify-between transition border border-slate-700">
-                            <span class="flex items-center space-x-3">
-                                <i class="fa-solid fa-phone text-amber-400 text-base"></i>
-                                <span>Direct Phone Call</span>
-                            </span>
-                            <span class="text-xs text-amber-400 font-mono font-bold">0962916549</span>
-                        </a>
-
-                        <a href="https://wa.me/251931935716?text=Hello%20Alexander,%20I%20would%20like%20to%20inquire%20about%20a%20property." target="_blank" class="w-full py-3 px-4 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 font-semibold text-sm flex items-center justify-between transition">
-                            <span class="flex items-center space-x-3">
-                                <i class="fa-brands fa-whatsapp text-lg"></i>
-                                <span>WhatsApp Direct Chat</span>
-                            </span>
-                            <span class="text-xs text-emerald-400 font-mono font-bold">0931935716</span>
-                        </a>
-
-                        <a href="https://t.me/Tfy2424TK" target="_blank" class="w-full py-3 px-4 rounded-xl bg-sky-600/20 hover:bg-sky-600/30 text-sky-400 border border-sky-500/30 font-semibold text-sm flex items-center justify-between transition">
-                            <span class="flex items-center space-x-3">
-                                <i class="fa-brands fa-telegram text-lg"></i>
-                                <span>Telegram Direct</span>
-                            </span>
-                            <span class="text-xs text-sky-400 font-bold">@Tfy2424TK</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Direct Agent General Inquiry Form -->
-            <div class="lg:col-span-7 glass-panel p-8 sm:p-10 rounded-3xl border border-slate-800">
-                <h3 class="text-2xl font-serif font-bold text-white mb-2">Send Direct Agent Inquiry</h3>
-                <p class="text-slate-400 text-xs sm:text-sm mb-6">Have a question about a home or interested in selling? Fill out this quick message to reach Alexander directly.</p>
-
-                <form id="generalInquiryForm" onsubmit="handleInquirySubmit(event)" class="space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Your Full Name</label>
-                            <input type="text" required placeholder="John Doe" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Phone / WhatsApp Number</label>
-                            <input type="tel" required placeholder="0931935716" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">I Am Looking To</label>
-                        <select class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500">
-                            <option value="buy">Buy a Luxury Property</option>
-                            <option value="rent">Rent a Luxury Residence</option>
-                            <option value="sell">Sell My Property with Agent</option>
-                            <option value="other">General Consultation</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Your Message or Requirements</label>
-                        <textarea rows="4" required placeholder="Tell us your preferred location, budget, or property details..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500"></textarea>
-                    </div>
-
-                    <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-sm transition shadow-lg shadow-amber-500/20">
-                        Send Message to Agent
-                    </button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- FOOTER SECTION -->
-    <footer class="bg-slate-950 border-t border-slate-800 text-slate-400 py-12 text-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div class="space-y-3">
-                <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center text-slate-950 font-bold">
-                        <i class="fa-solid fa-house-laptop"></i>
-                    </div>
-                    <span class="font-serif text-lg font-bold text-white">AURA ESTATES</span>
-                </div>
-                <p class="text-xs text-slate-400 leading-relaxed">Modern online real estate platform bridging verified buyers and sellers through direct agent representation.</p>
-            </div>
-
-            <div>
-                <h4 class="text-xs font-semibold uppercase text-amber-400 tracking-wider mb-3">Quick Navigation</h4>
-                <ul class="space-y-2 text-xs">
-                    <li><a href="#hero" class="hover:text-white">3D Villa Showcase</a></li>
-                    <li><a href="#properties" class="hover:text-white">Property Catalog</a></li>
-                    <li><a href="#how-it-works" class="hover:text-white">Agent Workflow</a></li>
-                    <li><a onclick="openSellerModal()" class="hover:text-white cursor-pointer">Seller Upload Portal</a></li>
-                </ul>
-            </div>
-
-            <div>
-                <h4 class="text-xs font-semibold uppercase text-amber-400 tracking-wider mb-3">Operating Regions</h4>
-                <p class="text-xs text-slate-400 leading-relaxed">Prime Metropolitan Centers, Coastal Estates, Gated Communities, and Modern Suburban Villas.</p>
-            </div>
-
-            <div>
-                <h4 class="text-xs font-semibold uppercase text-amber-400 tracking-wider mb-3">Direct Agent Contacts</h4>
-                <p class="text-xs text-slate-300 font-semibold mb-1">Alexander Vance (Principal Agent)</p>
-                <p class="text-xs text-slate-400 mb-1"><i class="fa-solid fa-phone text-amber-400 mr-1.5"></i> Call: 0962916549</p>
-                <p class="text-xs text-slate-400 mb-1"><i class="fa-brands fa-whatsapp text-emerald-400 mr-1.5"></i> WhatsApp: 0931935716</p>
-                <p class="text-xs text-slate-400"><i class="fa-brands fa-telegram text-sky-400 mr-1.5"></i> Telegram: @Tfy2424TK</p>
-            </div>
-        </div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 mt-8 border-t border-slate-900 text-center text-xs text-slate-500">
-            &copy; 2026 Aura Estates - Online House Agent Platform. All Rights Reserved.
-        </div>
-    </footer>
-
-    <!-- PROPERTY DETAIL MODAL -->
-    <div id="propertyModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6">
-        <div class="relative w-full max-w-5xl glass-panel rounded-3xl border border-slate-700 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
-            
-            <!-- Modal Header -->
-            <div class="p-4 sm:p-6 border-b border-slate-800 flex items-center justify-between bg-slate-900/80">
-                <div class="flex items-center space-x-3">
-                    <span id="modalBadge" class="px-3 py-1 rounded-full text-xs font-bold uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30">FOR SALE</span>
-                    <span id="modalRefCode" class="text-xs text-slate-400 font-mono">Ref #104</span>
-                </div>
-                <button onclick="closePropertyModal()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <!-- Modal Content Scrollable Body -->
-            <div class="p-4 sm:p-8 overflow-y-auto space-y-8">
-                
-                <!-- Main Image Banner / Video Embed Simulator -->
-                <div class="relative rounded-2xl overflow-hidden h-64 sm:h-96 bg-slate-900 border border-slate-800 group">
-                    <img id="modalMainImg" src="" alt="Property detail" class="w-full h-full object-cover">
-                    
-                    <!-- Video Walkthrough Badge Trigger -->
-                    <div class="absolute bottom-4 left-4 z-10">
-                        <button onclick="triggerVideoPlay()" class="px-4 py-2 rounded-xl glass-panel-light text-xs font-semibold text-white hover:bg-amber-500 hover:text-slate-950 flex items-center space-x-2 transition shadow-lg">
-                            <i class="fa-solid fa-circle-play text-amber-400 text-base"></i>
-                            <span id="videoBtnText">Watch Direct Video Walkthrough</span>
-                        </button>
-                    </div>
-
-                    <!-- Price tag -->
-                    <div class="absolute bottom-4 right-4 z-10 glass-panel px-4 py-2 rounded-xl border border-amber-500/30">
-                        <span id="modalPrice" class="text-xl sm:text-2xl font-serif font-bold text-amber-400">$3,450,000</span>
-                    </div>
-                </div>
-
-                <!-- Video Frame Container (Direct HTML5 Video or Simulated Tour) -->
-                <div id="videoContainer" class="hidden rounded-2xl overflow-hidden bg-black border border-amber-500/30 relative">
-                    <div id="videoPlayerWrapper" class="w-full aspect-video bg-slate-950 flex flex-col items-center justify-center p-4">
-                        <!-- Direct HTML5 video element inserted by JS -->
-                    </div>
-                </div>
-
-                <!-- Specs & Description Grid -->
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    
-                    <!-- Left: Details and Amenities -->
-                    <div class="lg:col-span-7 space-y-6">
-                        <div>
-                            <h2 id="modalTitle" class="text-2xl sm:text-3xl font-serif font-bold text-white mb-2">Modern Cubic Villa Lumina</h2>
-                            <p id="modalLocation" class="text-slate-400 text-sm flex items-center">
-                                <i class="fa-solid fa-location-dot text-amber-400 mr-2"></i>
-                                Beverly Hills, California
-                            </p>
-                        </div>
-
-                        <!-- Specifications Quick Grid -->
-                        <div class="grid grid-cols-4 gap-3 bg-slate-900/90 p-4 rounded-2xl border border-slate-800 text-center">
-                            <div>
-                                <i class="fa-solid fa-bed text-amber-400 mb-1 block"></i>
-                                <span id="modalBeds" class="text-sm font-bold text-white block">5</span>
-                                <span class="text-[10px] text-slate-400 uppercase">Bedrooms</span>
-                            </div>
-                            <div>
-                                <i class="fa-solid fa-bath text-amber-400 mb-1 block"></i>
-                                <span id="modalBaths" class="text-sm font-bold text-white block">6</span>
-                                <span class="text-[10px] text-slate-400 uppercase">Bathrooms</span>
-                            </div>
-                            <div>
-                                <i class="fa-solid fa-vector-square text-amber-400 mb-1 block"></i>
-                                <span id="modalSqft" class="text-sm font-bold text-white block">620 m²</span>
-                                <span class="text-[10px] text-slate-400 uppercase">Area</span>
-                            </div>
-                            <div>
-                                <i class="fa-solid fa-car text-amber-400 mb-1 block"></i>
-                                <span id="modalGarage" class="text-sm font-bold text-white block">3 Cars</span>
-                                <span class="text-[10px] text-slate-400 uppercase">Garage</span>
-                            </div>
-                        </div>
-
-                        <!-- Description -->
-                        <div class="space-y-2">
-                            <h4 class="text-xs font-semibold text-amber-400 uppercase tracking-wider">Property Description</h4>
-                            <p id="modalDesc" class="text-slate-300 text-sm leading-relaxed">
-                                High-end contemporary residence featuring architectural glowing exterior LED accents, floor-to-ceiling glass paneling, smart solar roof integration, and manicured landscaping.
-                            </p>
-                        </div>
-
-                        <!-- Key Features Badges -->
-                        <div class="space-y-2">
-                            <h4 class="text-xs font-semibold text-amber-400 uppercase tracking-wider">Property Highlights</h4>
-                            <div id="modalAmenities" class="flex flex-wrap gap-2">
-                                <!-- Rendered dynamically -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Sticky Sidebar: Contact Agent Actions -->
-                    <div class="lg:col-span-5 bg-slate-900/90 p-6 rounded-2xl border border-amber-500/20 space-y-6 glow-warm">
-                        <div class="border-b border-slate-800 pb-4">
-                            <span class="text-[10px] font-bold uppercase text-amber-400 tracking-wider">Direct Intermediary Agent</span>
-                            <h4 class="text-lg font-serif font-bold text-white mt-0.5">Alexander Vance</h4>
-                            <p class="text-xs text-slate-400">Sole Representative for Viewing & Negotiation</p>
-                        </div>
-
-                        <div class="space-y-3">
-                            <!-- Direct WhatsApp Pre-filled CTA -->
-                            <a id="modalWhatsappBtn" href="https://wa.me/251931935716" target="_blank" class="w-full py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm flex items-center justify-center space-x-2 transition shadow-lg shadow-emerald-600/20">
-                                <i class="fa-brands fa-whatsapp text-lg"></i>
-                                <span>WhatsApp Agent (0931935716)</span>
-                            </a>
-
-                            <!-- Direct Phone Call CTA -->
-                            <a href="tel:0962916549" class="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs flex items-center justify-center space-x-2 transition border border-slate-700">
-                                <i class="fa-solid fa-phone text-amber-400"></i>
-                                <span>Call Agent (0962916549)</span>
-                            </a>
-
-                            <!-- Direct Telegram CTA -->
-                            <a href="https://t.me/Tfy2424TK" target="_blank" class="w-full py-2.5 px-4 rounded-xl bg-sky-600/20 hover:bg-sky-600/30 text-sky-400 font-semibold text-xs flex items-center justify-center space-x-2 transition border border-sky-500/30">
-                                <i class="fa-brands fa-telegram text-base"></i>
-                                <span>Telegram (@Tfy2424TK)</span>
-                            </a>
-                        </div>
-
-                        <!-- Immediate Viewing Booking Form -->
-                        <form onsubmit="handleModalInquiry(event)" class="space-y-3 pt-4 border-t border-slate-800">
-                            <p class="text-xs font-semibold text-slate-200">Request Private Viewing Tour</p>
-                            <input type="text" required placeholder="Your Name" class="w-full bg-slate-950 border border-slate-700 text-xs rounded-lg p-2.5 text-white focus:outline-none focus:border-amber-500">
-                            <input type="tel" required placeholder="Your Phone Number" class="w-full bg-slate-950 border border-slate-700 text-xs rounded-lg p-2.5 text-white focus:outline-none focus:border-amber-500">
-                            <input type="date" required class="w-full bg-slate-950 border border-slate-700 text-xs rounded-lg p-2.5 text-white focus:outline-none focus:border-amber-500">
-                            <button type="submit" class="w-full py-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition">
-                                Request Schedule Confirmation
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- LANGUAGE SWITCHER BUTTON -->
+        <button onclick="toggleLanguage()" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold transition">
+          <i class="fa-solid fa-globe text-emerald-700"></i>
+          <span id="lang-indicator">Amharic (አማርኛ)</span>
+        </button>
+      </div>
     </div>
+  </header>
 
-    <!-- SELLER LISTING SUBMISSION MODAL -->
-    <div id="sellerModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6">
-        <div class="relative w-full max-w-3xl glass-panel rounded-3xl border border-amber-500/30 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
-            
-            <!-- Modal Header -->
-            <div class="p-4 sm:p-6 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
-                <div>
-                    <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Seller Listing Portal</span>
-                    <h3 class="text-xl font-serif font-bold text-white">Publish House Directly to Buyers</h3>
-                </div>
-                <button onclick="closeSellerModal()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
+  <!-- MAIN HERO & CONTROLS SECTION -->
+  <main class="flex-grow">
+    <section class="relative py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="text-center max-w-3xl mx-auto mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-3" id="hero-title">Find Your Ideal Home or List Your Property</h1>
+        <p class="text-slate-600 text-base sm:text-lg" id="hero-subtitle">Browse houses across major cities or upload your property for immediate publication.</p>
+      </div>
 
-            <!-- Form Body -->
-            <form id="sellerSubmissionForm" onsubmit="handleSellerSubmit(event)" class="p-6 overflow-y-auto space-y-6">
-                
-                <!-- Notice Banner -->
-                <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 flex items-start space-x-3">
-                    <i class="fa-solid fa-shield-halved text-base mt-0.5"></i>
-                    <span>Your property listing will be published immediately to the buyer catalog. Direct Agent contacts (0962916549 / @Tfy2424TK / 0931935716) will represent your listing.</span>
-                </div>
-
-                <!-- Section 1: Basic Info -->
-                <div class="space-y-4">
-                    <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider border-b border-slate-800 pb-1">1. Property Overview</h4>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Listing Title</label>
-                            <input type="text" id="sellerTitle" required placeholder="e.g. Modern Villa with Sunset Views" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Listing Category</label>
-                            <select id="sellerCategory" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
-                                <option value="buy">For Sale</option>
-                                <option value="rent">For Rent</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Price ($ or ETB)</label>
-                            <input type="text" id="sellerPrice" required placeholder="$2,500,000" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Property Type</label>
-                            <select id="sellerType" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
-                                <option value="villa">Villa</option>
-                                <option value="house">House</option>
-                                <option value="apartment">Apartment</option>
-                                <option value="penthouse">Penthouse</option>
-                                <option value="estate">Estate</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">City / Location</label>
-                            <input type="text" id="sellerLocation" required placeholder="Addis Ababa, Ethiopia" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Section 2: Specifications -->
-                <div class="space-y-4">
-                    <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider border-b border-slate-800 pb-1">2. Specifications & Features</h4>
-                    
-                    <div class="grid grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Bedrooms</label>
-                            <input type="number" id="sellerBeds" value="4" min="1" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Bathrooms</label>
-                            <input type="number" id="sellerBaths" value="4" min="1" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Area (m²)</label>
-                            <input type="text" id="sellerSqm" value="450 m²" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Description & Amenities</label>
-                        <textarea id="sellerDesc" rows="3" required placeholder="Highlight key features e.g. Garden, solar panels, modern kitchen, LED lights..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-amber-500"></textarea>
-                    </div>
-                </div>
-
-                <!-- Section 3: Media Upload & Video Link -->
-                <div class="space-y-4">
-                    <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider border-b border-slate-800 pb-1">3. Media Upload (Photos & Direct Video Walkthrough)</h4>
-                    
-                    <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Optional Online Video Link (MP4 / YouTube / Vimeo)</label>
-                        <input type="url" id="sellerVideoUrl" placeholder="https://example.com/property-tour.mp4" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
-                    </div>
-
-                    <div id="dropzone" onclick="triggerFileInput()" class="border-2 border-dashed border-amber-500/40 hover:border-amber-400 rounded-2xl p-6 text-center bg-slate-900/60 cursor-pointer transition">
-                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-amber-400 mb-2"></i>
-                        <p class="text-xs text-slate-200 font-semibold">Click or drag property photos & video files here</p>
-                        <p class="text-[10px] text-slate-400 mt-1">Select local image or video clips to present to buyers</p>
-                        <input type="file" id="fileInput" multiple accept="image/*,video/*" class="hidden" onchange="handleFileSelect(event)">
-                    </div>
-
-                    <div id="filePreviews" class="flex flex-wrap gap-2 pt-2">
-                        <!-- Preview thumbnails inserted dynamically -->
-                    </div>
-                </div>
-
-                <!-- Section 4: Seller Owner Contact Info -->
-                <div class="space-y-4">
-                    <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider border-b border-slate-800 pb-1">4. Owner Contact Information</h4>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Your Full Name</label>
-                            <input type="text" required placeholder="Property Owner" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Your Mobile / WhatsApp</label>
-                            <input type="tel" required placeholder="0931935716" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
-                        </div>
-                    </div>
-                </div>
-
-                <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider transition shadow-lg shadow-amber-500/25">
-                    Publish Property to Buyer Catalog
-                </button>
-            </form>
+      <!-- MAIN SEARCH & FILTER CONTROLS CARD -->
+      <div class="glass-card rounded-2xl shadow-xl p-6 mb-12 border border-slate-200">
+        
+        <!-- TRANSACTION TABS -->
+        <div class="flex border-b border-slate-200 mb-6">
+          <button id="tab-buy" onclick="setTab('buy')" class="py-3 px-6 font-semibold border-b-2 border-emerald-700 text-emerald-700 text-sm transition">Buy House</button>
+          <button id="tab-rent" onclick="setTab('rent')" class="py-3 px-6 font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-700 text-sm transition">Rent House</button>
+          <button id="tab-sell" onclick="setTab('sell')" class="py-3 px-6 font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-700 text-sm transition">Sell / Upload</button>
         </div>
-    </div>
 
-    <!-- JAVASCRIPT APP LOGIC -->
-    <script>
-        // --- 1. SAMPLE REAL ESTATE DATA (Dynamically expandable with seller uploads) ---
-        const propertiesData = [
-            {
-                id: "104",
-                title: "Modern Cubic Villa Lumina",
-                type: "villa",
-                category: "buy",
-                price: "$3,450,000",
-                location: "Beverly Hills, California",
-                beds: 5,
-                baths: 6,
-                sqm: "620 m²",
-                garage: "3 Cars",
-                image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
-                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-                amenities: ["Warm Exterior LED Strips", "Floor-to-Ceiling Glass", "Glass Railing Balconies", "Manicured Palm Garden", "Subterranean Garage"],
-                description: "Ultra-modern architectural villa featuring white minimalist cubic geometry, glowing warm perimeter LED accent illumination, subterranean luxury garage, and sleek glass balconies."
-            },
-            {
-                id: "108",
-                title: "The Cascade Minimalist Estate",
-                type: "estate",
-                category: "buy",
-                price: "$4,800,000",
-                location: "Malibu, California",
-                beds: 6,
-                baths: 7,
-                sqm: "780 m²",
-                garage: "4 Cars",
-                image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-                amenities: ["Infinity Pool", "Ocean Sunset View", "Private Driveway", "Outdoor Living Deck", "Custom Lighting Architecture"],
-                description: "Multi-level modern luxury sanctuary with wide glass paneling, outdoor twilight LED accents, and private infinity garden."
-            },
-            {
-                id: "202",
-                title: "Skyline Horizon Penthouse",
-                type: "penthouse",
-                category: "buy",
-                price: "$2,900,000",
-                location: "Downtown Metro Plaza",
-                beds: 3,
-                baths: 3.5,
-                sqm: "380 m²",
-                garage: "2 Spaces",
-                image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
-                videoUrl: "",
-                amenities: ["360 Sky Deck", "Private Elevator", "Designer Italian Kitchen", "Automated Blinds"],
-                description: "Top-floor executive penthouse offering breathtaking panorama skyline views, high ceilings, and concierge elevator service."
-            },
-            {
-                id: "305",
-                title: "Architectural Glass Residence",
-                type: "villa",
-                category: "rent",
-                price: "$18,500 / mo",
-                location: "Palm Springs, California",
-                beds: 4,
-                baths: 4.5,
-                sqm: "490 m²",
-                garage: "2 Cars",
-                image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
-                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-                amenities: ["Desert Zen Landscaping", "Warm Accent Strip Lights", "Solar Heated Pool", "Gated Security"],
-                description: "Available for long-term lease. Minimalist single-family modern villa with floor-to-ceiling glass integration and ambient courtyard."
-            },
-            {
-                id: "401",
-                title: "Oceanfront Glass Pavilion",
-                type: "apartment",
-                category: "rent",
-                price: "$12,000 / mo",
-                location: "Coastal Boulevard",
-                beds: 2,
-                baths: 2,
-                sqm: "210 m²",
-                garage: "1 Space",
-                image: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80",
-                videoUrl: "",
-                amenities: ["Direct Beach Access", "Floor-to-Ceiling Windows", "Custom LED Cove Lights"],
-                description: "Luxury modern beachfront residence featuring premium contemporary finishes and direct private shore access."
-            }
-        ];
+        <!-- SEARCH FILTERS (VISIBLE FOR BUY/RENT) -->
+        <div id="filter-panel" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <!-- HOUSE TYPE OPTION (ORDERED SMALLEST TO LARGEST) -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1" id="lbl-house-type">House Type</label>
+            <select id="select-house-type" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-600 outline-none">
+              <option value="all" id="opt-type-all">All Property Types</option>
+              <option value="studio" id="opt-type-1">1. Studio / Single Room</option>
+              <option value="apartment" id="opt-type-2">2. Apartment / Flat</option>
+              <option value="condo" id="opt-type-3">3. Condominium</option>
+              <option value="villa" id="opt-type-4">4. Townhouse / Villa</option>
+              <option value="mansion" id="opt-type-5">5. Multi-Story Real Estate Mansion</option>
+            </select>
+          </div>
 
-        // Global uploaded video/image Object URLs
-        let selectedUploadedFiles = [];
+          <!-- CITY SELECTION -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1" id="lbl-city">City</label>
+            <select id="select-city" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-600 outline-none">
+              <option value="all" id="opt-city-all">All Cities</option>
+              <option value="addis">Addis Ababa</option>
+              <option value="bahirdar">Bahir Dar</option>
+              <option value="hawassa">Hawassa</option>
+              <option value="adama">Adama</option>
+            </select>
+          </div>
 
-        // --- 2. RENDER PROPERTY CATALOG FOR BUYERS ---
-        let currentFilter = 'all';
+          <!-- SUB-CITY / DISTRICT -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1" id="lbl-subcity">Sub-City / District</label>
+            <input type="text" id="input-subcity" placeholder="e.g. Bole, Kebele 04..." class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-600 outline-none">
+          </div>
 
-        function renderCatalog() {
-            const grid = document.getElementById('propertyGrid');
-            grid.innerHTML = '';
+          <!-- PRICE RANGE FILTER -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1" id="lbl-price">Max Price Limit</label>
+            <div class="flex items-center gap-2">
+              <input type="number" id="input-price" placeholder="Amount" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-600 outline-none">
+              <select id="select-currency" class="bg-slate-100 border border-slate-300 rounded-lg px-2 py-2 text-sm font-semibold">
+                <option value="ETB">ETB (ብር)</option>
+                <option value="USD">USD ($)</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
-            const filtered = propertiesData.filter(item => {
-                if (currentFilter === 'all') return true;
-                return item.category === currentFilter;
-            });
+        <!-- SELLER UPLOAD FORM (VISIBLE WHEN 'SELL' TAB IS SELECTED) -->
+        <div id="seller-form" class="hidden space-y-4">
+          <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900 flex items-center gap-3">
+            <i class="fa-brands fa-facebook text-2xl text-blue-600"></i>
+            <div>
+              <p class="font-bold" id="fb-notice-title">Automatic Social Cross-Posting Enabled</p>
+              <p id="fb-notice-desc">All uploaded media and house specifications will automatically sync and upload to the official agent Facebook account: <strong class="underline">Tesfaye Abate</strong>.</p>
+            </div>
+          </div>
 
-            filtered.forEach(item => {
-                const card = document.createElement('div');
-                card.className = "glass-panel rounded-3xl border border-slate-800/80 overflow-hidden group hover:border-amber-500/40 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1";
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <input type="text" id="seller-title" placeholder="Property Title / የቤት ርዕስ" class="border border-slate-300 rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-emerald-600">
+            <select id="seller-house-type" class="border border-slate-300 rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-emerald-600">
+              <option value="studio">1. Studio / Single Room</option>
+              <option value="apartment">2. Apartment / Flat</option>
+              <option value="condo">3. Condominium</option>
+              <option value="villa">4. Townhouse / Villa</option>
+              <option value="mansion">5. Multi-Story Real Estate Mansion</option>
+            </select>
+            <input type="number" id="seller-price-birr" placeholder="Price in Birr / ዋጋ በብር" class="border border-slate-300 rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-emerald-600">
+            <input type="number" id="seller-price-usd" placeholder="Price in USD ($) / ዋጋ በዶላር" class="border border-slate-300 rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-emerald-600">
+          </div>
 
-                card.innerHTML = `
-                    <div>
-                        <!-- Image thumbnail with badge & Video Indicator -->
-                        <div class="relative h-60 overflow-hidden bg-slate-900">
-                            <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/800x600/1e293b/f59e0b?text=Luxury+Property'">
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60"></div>
-                            
-                            <!-- Category Badge -->
-                            <div class="absolute top-4 left-4 z-10">
-                                <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase ${item.category === 'buy' ? 'bg-amber-500 text-slate-950' : 'bg-blue-600 text-white'} shadow-md">
-                                    ${item.category === 'buy' ? 'For Sale' : 'For Rent'}
-                                </span>
-                            </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1" id="lbl-upload-media">Upload Images / Property Video</label>
+            <input type="file" multiple accept="image/*,video/*" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-100 file:text-emerald-800 hover:file:bg-emerald-200">
+          </div>
 
-                            <!-- Video Walkthrough Badge if Video exists -->
-                            ${item.videoUrl ? `
-                            <div class="absolute bottom-3 right-4 z-10 px-2.5 py-1 rounded-lg bg-amber-500/90 text-slate-950 font-bold text-[10px] flex items-center space-x-1 shadow-lg animate-pulse">
-                                <i class="fa-solid fa-video"></i>
-                                <span>Video Available</span>
-                            </div>
-                            ` : ''}
+          <div class="p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900 font-medium">
+            <span id="lbl-commission-agree">By listing your property, you acknowledge and agree to pay the standard 3% to 5% negotiable agent commission fee upon sale or rental agreement completion.</span>
+          </div>
 
-                            <!-- Property ID -->
-                            <div class="absolute top-4 right-4 z-10 glass-panel-light px-2.5 py-1 rounded-lg text-[10px] text-slate-300 font-mono">
-                                #${item.id}
-                            </div>
+          <button type="button" onclick="submitProperty()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-lg shadow-md transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span id="btn-submit-listing">Publish & Direct Upload to Facebook (Tesfaye Abate)</span>
+          </button>
+        </div>
 
-                            <!-- Price Tag -->
-                            <div class="absolute bottom-3 left-4 z-10">
-                                <span class="text-xl font-serif font-bold text-white drop-shadow-md">${item.price}</span>
-                            </div>
-                        </div>
+      </div>
 
-                        <!-- Card Body -->
-                        <div class="p-6 space-y-4">
-                            <div>
-                                <h3 class="text-lg font-serif font-bold text-white group-hover:text-amber-400 transition">${item.title}</h3>
-                                <p class="text-xs text-slate-400 flex items-center mt-1">
-                                    <i class="fa-solid fa-location-dot text-amber-400 mr-1.5"></i>
-                                    ${item.location}
-                                </p>
-                            </div>
+      <!-- PROPERTY LISTINGS CONTAINER -->
+      <div id="listings-section">
+        <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center justify-between">
+          <span id="section-title">Available House Listings</span>
+          <span class="text-xs font-normal text-slate-500" id="listing-count">Showing active results</span>
+        </h2>
 
-                            <!-- Quick Specs Bar -->
-                            <div class="grid grid-cols-3 gap-2 py-3 px-2 rounded-xl bg-slate-900/80 border border-slate-800/80 text-center text-xs">
-                                <div>
-                                    <span class="text-slate-400 block text-[10px]">Beds</span>
-                                    <span class="font-bold text-white"><i class="fa-solid fa-bed text-amber-400 mr-1"></i>${item.beds}</span>
-                                </div>
-                                <div>
-                                    <span class="text-slate-400 block text-[10px]">Baths</span>
-                                    <span class="font-bold text-white"><i class="fa-solid fa-bath text-amber-400 mr-1"></i>${item.baths}</span>
-                                </div>
-                                <div>
-                                    <span class="text-slate-400 block text-[10px]">Area</span>
-                                    <span class="font-bold text-white">${item.sqm}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card Footer Actions -->
-                    <div class="p-6 pt-0 flex items-center space-x-2">
-                        <button onclick="openPropertyModal('${item.id}')" class="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center justify-center space-x-1.5 transition border border-slate-700">
-                            <i class="fa-solid fa-eye"></i>
-                            <span>View Specs & Video</span>
-                        </button>
-                        
-                        <!-- Direct Agent WhatsApp Link -->
-                        <a href="https://wa.me/251931935716?text=Hello%20Agent,%20I%20am%20interested%20in%20Property%20ID%20%23${item.id}%20(${encodeURIComponent(item.title)})" target="_blank" class="p-2.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 transition text-sm flex items-center justify-center" title="Chat Agent on WhatsApp (0931935716)">
-                            <i class="fa-brands fa-whatsapp"></i>
-                        </a>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function filterType(type) {
-            currentFilter = type;
-            ['all', 'buy', 'rent'].forEach(t => {
-                const btn = document.getElementById(`tab-${t}`);
-                if (btn) {
-                    if (t === type) {
-                        btn.className = "px-4 py-2 rounded-xl text-xs font-semibold text-slate-950 bg-amber-400 transition";
-                    } else {
-                        btn.className = "px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition";
-                    }
-                }
-            });
-            renderCatalog();
-        }
-
-        // --- 3. HERO SEARCH FILTER FUNCTIONALITY ---
-        function handleHeroSearch(event) {
-            event.preventDefault();
-            const intent = document.getElementById('searchIntent').value;
-            filterType(intent === 'buy' ? 'buy' : (intent === 'rent' ? 'rent' : 'all'));
-            document.getElementById('properties').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // --- 4. PROPERTY DETAIL MODAL & DIRECT VIDEO WATCHING ---
-        let currentModalProperty = null;
-
-        function openPropertyModal(id) {
-            const property = propertiesData.find(p => p.id === id);
-            if (!property) return;
-            currentModalProperty = property;
-
-            document.getElementById('modalTitle').innerText = property.title;
-            document.getElementById('modalRefCode').innerText = `Ref #${property.id}`;
-            document.getElementById('modalPrice').innerText = property.price;
-            document.getElementById('modalLocation').innerHTML = `<i class="fa-solid fa-location-dot text-amber-400 mr-2"></i>${property.location}`;
-            document.getElementById('modalMainImg').src = property.image;
-            document.getElementById('modalBeds').innerText = property.beds;
-            document.getElementById('modalBaths').innerText = property.baths;
-            document.getElementById('modalSqft').innerText = property.sqm;
-            document.getElementById('modalGarage').innerText = property.garage || '2 Spaces';
-            document.getElementById('modalDesc').innerText = property.description;
-            document.getElementById('modalBadge').innerText = property.category === 'buy' ? 'FOR SALE' : 'FOR RENT';
-
-            // Direct WhatsApp button update
-            const waText = encodeURIComponent(`Hello Agent Alexander (0931935716), I am inquiring about Property Ref #${property.id} (${property.title}) listed for ${property.price}. Please confirm viewing schedules.`);
-            document.getElementById('modalWhatsappBtn').href = `https://wa.me/251931935716?text=${waText}`;
-
-            // Amenities badges
-            const amenitiesContainer = document.getElementById('modalAmenities');
-            amenitiesContainer.innerHTML = '';
-            (property.amenities || ["Modern Finish", "Private Parking", "Scenic Views"]).forEach(am => {
-                const tag = document.createElement('span');
-                tag.className = 'px-3 py-1 rounded-lg bg-slate-800 text-xs text-slate-300 border border-slate-700 flex items-center space-x-1';
-                tag.innerHTML = `<i class="fa-solid fa-check text-amber-400 text-[10px]"></i><span>${am}</span>`;
-                amenitiesContainer.appendChild(tag);
-            });
-
-            // Video player setup
-            const videoBtnText = document.getElementById('videoBtnText');
-            if (property.videoUrl) {
-                videoBtnText.innerText = "Play Direct Property Video";
-            } else {
-                videoBtnText.innerText = "Video Walkthrough Pending";
-            }
-
-            document.getElementById('videoContainer').classList.add('hidden');
-            document.getElementById('propertyModal').classList.remove('hidden');
-            document.body.classList.add('modal-active');
-        }
-
-        function closePropertyModal() {
-            document.getElementById('propertyModal').classList.add('hidden');
-            document.body.classList.remove('modal-active');
-            const wrapper = document.getElementById('videoPlayerWrapper');
-            wrapper.innerHTML = '';
-        }
-
-        function triggerVideoPlay() {
-            const vContainer = document.getElementById('videoContainer');
-            const wrapper = document.getElementById('videoPlayerWrapper');
-
-            if (!currentModalProperty) return;
-
-            if (vContainer.classList.contains('hidden')) {
-                vContainer.classList.remove('hidden');
-
-                if (currentModalProperty.videoUrl) {
-                    wrapper.innerHTML = `
-                        <div class="w-full flex items-center justify-between pb-2 mb-2 border-b border-slate-800">
-                            <span class="text-xs text-amber-400 font-bold"><i class="fa-solid fa-play-circle mr-1"></i> Direct Video Walkthrough</span>
-                            <button onclick="closeVideoPlay()" class="text-xs text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i> Close Video</button>
-                        </div>
-                        <video controls autoplay class="w-full h-auto max-h-[380px] rounded-xl shadow-2xl">
-                            <source src="${currentModalProperty.videoUrl}" type="video/mp4">
-                            Your browser does not support HTML5 video tags.
-                        </video>
-                    `;
-                } else {
-                    wrapper.innerHTML = `
-                        <div class="text-center py-8 space-y-3">
-                            <i class="fa-solid fa-video-slash text-4xl text-amber-400"></i>
-                            <p class="text-sm text-white font-bold">No direct video uploaded for this listing yet.</p>
-                            <p class="text-xs text-slate-400">Sellers can upload video files directly when submitting their property.</p>
-                            <button onclick="closeVideoPlay()" class="px-4 py-2 bg-slate-800 text-xs rounded-xl text-slate-300">Close</button>
-                        </div>
-                    `;
-                }
-            } else {
-                vContainer.classList.add('hidden');
-                wrapper.innerHTML = '';
-            }
-        }
-
-        function closeVideoPlay() {
-            const vContainer = document.getElementById('videoContainer');
-            vContainer.classList.add('hidden');
-            document.getElementById('videoPlayerWrapper').innerHTML = '';
-        }
-
-        function handleModalInquiry(e) {
-            e.preventDefault();
-            alertMessage("Viewing Request Received!", "Agent Alexander Vance has received your request. You will receive a direct WhatsApp/Call confirmation shortly (0962916549 / 0931935716).");
-            closePropertyModal();
-        }
-
-        // --- 5. SELLER SUBMISSION SYSTEM (PUBILSHES DIRECTLY TO BUYER CATALOG) ---
-        function openSellerModal() {
-            document.getElementById('sellerModal').classList.remove('hidden');
-            document.body.classList.add('modal-active');
-        }
-
-        function closeSellerModal() {
-            document.getElementById('sellerModal').classList.add('hidden');
-            document.body.classList.remove('modal-active');
-        }
-
-        function triggerFileInput() {
-            document.getElementById('fileInput').click();
-        }
-
-        function handleFileSelect(e) {
-            const files = Array.from(e.target.files);
-            selectedUploadedFiles = files;
-            const container = document.getElementById('filePreviews');
-            container.innerHTML = '';
-
-            files.forEach(file => {
-                const badge = document.createElement('div');
-                badge.className = 'px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs flex items-center space-x-2';
-                const isVideo = file.type.startsWith('video/');
-                badge.innerHTML = `<i class="${isVideo ? 'fa-solid fa-video text-amber-400' : 'fa-solid fa-file-image'}"></i><span class="truncate max-w-[130px]">${file.name}</span>`;
-                container.appendChild(badge);
-            });
-        }
-
-        function handleSellerSubmit(e) {
-            e.preventDefault();
-
-            // Extract form values
-            const title = document.getElementById('sellerTitle').value;
-            const category = document.getElementById('sellerCategory').value;
-            const price = document.getElementById('sellerPrice').value;
-            const type = document.getElementById('sellerType').value;
-            const location = document.getElementById('sellerLocation').value;
-            const beds = parseInt(document.getElementById('sellerBeds').value) || 3;
-            const baths = parseInt(document.getElementById('sellerBaths').value) || 3;
-            const sqm = document.getElementById('sellerSqm').value || "400 m²";
-            const desc = document.getElementById('sellerDesc').value;
-            let videoUrlInput = document.getElementById('sellerVideoUrl').value;
-
-            // Handle uploaded files (images & videos)
-            let imageSrc = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80";
-            
-            if (selectedUploadedFiles.length > 0) {
-                const imgFile = selectedUploadedFiles.find(f => f.type.startsWith('image/'));
-                if (imgFile) {
-                    imageSrc = URL.createObjectURL(imgFile);
-                }
-                const vidFile = selectedUploadedFiles.find(f => f.type.startsWith('video/'));
-                if (vidFile) {
-                    videoUrlInput = URL.createObjectURL(vidFile);
-                }
-            }
-
-            // Create new property object and insert at beginning of catalog
-            const newProperty = {
-                id: Math.floor(100 + Math.random() * 900).toString(),
-                title: title,
-                type: type,
-                category: category,
-                price: price.startsWith('$') ? price : `$${price}`,
-                location: location,
-                beds: beds,
-                baths: baths,
-                sqm: sqm,
-                garage: "Private Parking",
-                image: imageSrc,
-                videoUrl: videoUrlInput || "",
-                amenities: ["Seller Uploaded", "Agent Verified", "Direct Inspection Available"],
-                description: desc
-            };
-
-            propertiesData.unshift(newProperty);
-            renderCatalog();
-
-            alertMessage("House Published Successfully!", `Your house "${title}" is now visible to all buyers in the Property Catalog. Buyers can view your images, videos, and specifications. Direct Agent Alexander will handle viewings via 0962916549 / 0931935716 / @Tfy2424TK.`);
-            
-            closeSellerModal();
-            document.getElementById('sellerSubmissionForm').reset();
-            document.getElementById('filePreviews').innerHTML = '';
-            selectedUploadedFiles = [];
-
-            // Scroll buyer down to property catalog to see new listing
-            document.getElementById('properties').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function handleInquirySubmit(e) {
-            e.preventDefault();
-            alertMessage("Inquiry Sent Directly to Agent!", "Thank you for reaching out. Agent Alexander Vance will contact you back directly via Phone (0962916549) / WhatsApp (0931935716) / Telegram (@Tfy2424TK).");
-            document.getElementById('generalInquiryForm').reset();
-        }
-
-        // Custom non-alert modal replacement
-        function alertMessage(title, text) {
-            const dialog = document.createElement('div');
-            dialog.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm';
-            dialog.innerHTML = `
-                <div class="glass-panel p-6 rounded-2xl border border-amber-500/40 max-w-md w-full text-center space-y-4 glow-warm">
-                    <div class="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto text-xl">
-                        <i class="fa-solid fa-circle-check"></i>
-                    </div>
-                    <h3 class="text-xl font-serif font-bold text-white">${title}</h3>
-                    <p class="text-xs text-slate-300 leading-relaxed">${text}</p>
-                    <button onclick="this.parentElement.parentElement.remove()" class="w-full py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs uppercase tracking-wider hover:bg-amber-400">
-                        Acknowledge & Continue
-                    </button>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="listings-grid">
+          
+          <!-- PROPERTY ITEM 1: VILLA -->
+          <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-md hover:shadow-xl transition flex flex-col">
+            <div class="relative h-56 bg-slate-200">
+              <img src="https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcTd9emgTStmXZ0L54cSjSduEFhOxzF9NJXP_PKwk3DNcbj8oPCI4Wlccr5AcFnQ5wsPAGj3GD-zLEtUnPA" alt="Modern Villa Exterior" class="w-full h-full object-cover">
+              <span class="absolute top-3 left-3 bg-emerald-700 text-white text-xs font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">For Sale</span>
+              <span class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-1 rounded-md">Townhouse / Villa</span>
+            </div>
+            <div class="p-5 flex-grow flex flex-col justify-between">
+              <div>
+                <h3 class="font-bold text-lg text-slate-900 mb-1">Luxury Modern Villa Facade</h3>
+                <p class="text-xs text-slate-500 mb-3"><i class="fa-solid fa-location-dot text-emerald-600 mr-1"></i> Addis Ababa, Bole Sub-City</p>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex items-center justify-between mb-4">
+                  <div>
+                    <span class="block text-xs text-slate-400 font-medium">Price (Birr)</span>
+                    <span class="font-extrabold text-emerald-800 text-base">28,500,000 ETB</span>
+                  </div>
+                  <div class="text-right border-l border-slate-200 pl-3">
+                    <span class="block text-xs text-slate-400 font-medium">Price (USD)</span>
+                    <span class="font-bold text-slate-700 text-sm">$ 210,000 USD</span>
+                  </div>
                 </div>
-            `;
-            document.body.appendChild(dialog);
-        }
+              </div>
+              <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <span><i class="fa-solid fa-handshake text-amber-600 mr-1"></i> 3%-5% Agent Fee</span>
+                <button class="bg-slate-900 text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition font-medium">View Details</button>
+              </div>
+            </div>
+          </div>
 
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobileMenu');
-            menu.classList.toggle('hidden');
-        }
+          <!-- PROPERTY ITEM 2: APARTMENT -->
+          <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-md hover:shadow-xl transition flex flex-col">
+            <div class="relative h-56 bg-slate-200">
+              <img src="https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcRbDJH9exapTfqvcI4Mc3Ki4kHmufbFMr72qWQz6VA1dMUEWjx0_npvbN7ydXmw_d09NRfzvu_pGRO_Ya0" alt="Modern Apartment Building" class="w-full h-full object-cover">
+              <span class="absolute top-3 left-3 bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">For Rent</span>
+              <span class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-1 rounded-md">Apartment / Flat</span>
+            </div>
+            <div class="p-5 flex-grow flex flex-col justify-between">
+              <div>
+                <h3 class="font-bold text-lg text-slate-900 mb-1">Executive Modern Apartment</h3>
+                <p class="text-xs text-slate-500 mb-3"><i class="fa-solid fa-location-dot text-emerald-600 mr-1"></i> Bahir Dar, Kebele 04</p>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex items-center justify-between mb-4">
+                  <div>
+                    <span class="block text-xs text-slate-400 font-medium">Monthly Rent</span>
+                    <span class="font-extrabold text-emerald-800 text-base">45,000 ETB /mo</span>
+                  </div>
+                  <div class="text-right border-l border-slate-200 pl-3">
+                    <span class="block text-xs text-slate-400 font-medium">Price (USD)</span>
+                    <span class="font-bold text-slate-700 text-sm">$ 350 USD /mo</span>
+                  </div>
+                </div>
+              </div>
+              <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <span><i class="fa-solid fa-handshake text-amber-600 mr-1"></i> Negotiable Fee</span>
+                <button class="bg-slate-900 text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition font-medium">View Details</button>
+              </div>
+            </div>
+          </div>
 
-        // --- 6. THREE.JS 3D MODERN VILLA INTERACTIVE SCENE ---
-        // (Renders a stylish 3D minimalist cubic villa with warm LED strip highlights matching user reference photos)
-        let scene, camera, renderer, villaGroup, ambientLight, ledLights = [], isLightsOn = true;
-        let isDragging = false, previousMousePosition = { x: 0, y: 0 };
+          <!-- PROPERTY ITEM 3: CONDOMINIUM -->
+          <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-md hover:shadow-xl transition flex flex-col">
+            <div class="relative h-56 bg-slate-200">
+              <img src="https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcRSGcRx4665CcSKW_PfB-hyoMlw7SPHEQKOQN0DvtOuBbBVBtAz4aqfMvTq8oqqvuSPasfIMAo41eFHnDA" alt="Modern Condominium Exterior" class="w-full h-full object-cover">
+              <span class="absolute top-3 left-3 bg-emerald-700 text-white text-xs font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">For Sale</span>
+              <span class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-1 rounded-md">Condominium</span>
+            </div>
+            <div class="p-5 flex-grow flex flex-col justify-between">
+              <div>
+                <h3 class="font-bold text-lg text-slate-900 mb-1">High-Rise Modern Condominium</h3>
+                <p class="text-xs text-slate-500 mb-3"><i class="fa-solid fa-location-dot text-emerald-600 mr-1"></i> Hawassa, City Center</p>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex items-center justify-between mb-4">
+                  <div>
+                    <span class="block text-xs text-slate-400 font-medium">Price (Birr)</span>
+                    <span class="font-extrabold text-emerald-800 text-base">14,200,000 ETB</span>
+                  </div>
+                  <div class="text-right border-l border-slate-200 pl-3">
+                    <span class="block text-xs text-slate-400 font-medium">Price (USD)</span>
+                    <span class="font-bold text-slate-700 text-sm">$ 105,000 USD</span>
+                  </div>
+                </div>
+              </div>
+              <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <span><i class="fa-solid fa-handshake text-amber-600 mr-1"></i> 3%-5% Agent Fee</span>
+                <button class="bg-slate-900 text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition font-medium">View Details</button>
+              </div>
+            </div>
+          </div>
 
-        function init3D() {
-            const container = document.getElementById('canvas-container');
-            const canvas = document.getElementById('canvas3d');
+        </div>
+      </div>
+    </section>
+  </main>
 
-            // 1. Scene
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0B0F17); // Twilight night backdrop
+  <!-- FOOTER -->
+  <footer class="bg-slate-900 text-slate-400 py-8 px-4 border-t border-slate-800 text-xs">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+      <div>
+        <p class="font-bold text-slate-200">AURA REAL ESTATE AGENT</p>
+        <p>Direct Cross-Posting Integration: Facebook Account <span class="text-emerald-400">Tesfaye Abate</span></p>
+      </div>
+      <div>
+        <p id="footer-commission">Agent Commission Policy: 3% - 5% negotiable on all housing transactions.</p>
+      </div>
+    </div>
+  </footer>
 
-            // 2. Camera
-            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(22, 14, 26);
-            camera.lookAt(0, 3, 0);
+  <!-- DYNAMIC JAVASCRIPT FOR TRANSLATIONS & TABS -->
+  <script>
+    let currentLang = 'en';
 
-            // 3. Renderer
-            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            renderer.shadowMap.enabled = true;
+    const translations = {
+      en: {
+        banner: "Agent Fee Notice: A 3% – 5% commission applies to all completed sales and rental agreements (Negotiable).",
+        subLogo: "Real Estate & Housing Agent",
+        navBuy: "Buy",
+        navRent: "Rent",
+        navSell: "Sell Property",
+        langBtn: "Amharic (አማርኛ)",
+        heroTitle: "Find Your Ideal Home or List Your Property",
+        heroSubtitle: "Browse houses across major cities or upload your property for immediate publication.",
+        tabBuy: "Buy House",
+        tabRent: "Rent House",
+        tabSell: "Sell / Upload",
+        lblType: "House Type (Smallest to Largest)",
+        optTypeAll: "All Property Types",
+        opt1: "1. Studio / Single Room",
+        opt2: "2. Apartment / Flat",
+        opt3: "3. Condominium",
+        opt4: "4. Townhouse / Villa",
+        opt5: "5. Multi-Story Real Estate Mansion",
+        lblCity: "City",
+        optCityAll: "All Cities",
+        lblSubcity: "Sub-City / District",
+        lblPrice: "Max Price Limit",
+        fbNoticeTitle: "Automatic Social Cross-Posting Enabled",
+        fbNoticeDesc: "All uploaded media and house specifications will automatically sync and upload to the official agent Facebook account: Tesfaye Abate.",
+        lblUploadMedia: "Upload Images / Property Video",
+        lblCommissionAgree: "By listing your property, you acknowledge and agree to pay the standard 3% to 5% negotiable agent commission fee upon sale or rental agreement completion.",
+        btnSubmitListing: "Publish & Direct Upload to Facebook (Tesfaye Abate)",
+        sectionTitle: "Available House Listings"
+      },
+      am: {
+        banner: "የወኪል ክፍያ ማስታወቂያ፡ በሁሉም የሽያጭ እና የኪራይ ስምምነቶች ላይ ከ 3% እስከ 5% ተደራዳሪ የወኪል ኮሚሽን ይፈጸማል።",
+        subLogo: "የቤት እና ህንፃ ወኪል",
+        navBuy: "ግዢ",
+        navRent: "ኪራይ",
+        navSell: "ቤት ለመሸጥ/ለማከራየት",
+        langBtn: "English",
+        heroTitle: "የሚፈልጉትን ቤት ያግኙ ወይም የቤትዎን መረጃ ያስገቡ",
+        heroSubtitle: "በሁሉም ከተሞች የሚገኙ ቤቶችን ይመልከቱ ወይም ቤትዎን በፍጥነት ያስመዝግቡ።",
+        tabBuy: "ቤት ለመግዛት",
+        tabRent: "ቤት ለመከራየት",
+        tabSell: "ለመሸጥ / ለመመዝገብ",
+        lblType: "የቤት ዓይነት (ከተራ እስከ ትልቅ)",
+        optTypeAll: "ሁሉም የቤት ዓይነቶች",
+        opt1: "1. ስቱዲዮ / ነጠላ ክፍል (Studio)",
+        opt2: "2. አፓርታማ / ፎቅ (Apartment)",
+        opt3: "3. ኮንዶሚኒየም (Condominium)",
+        opt4: "4. ቪላ (Villa / Townhouse)",
+        opt5: "5. ባለብዙ ፎቅ ሪል እስቴት / መኖሪያ ቪላ",
+        lblCity: "ከተማ",
+        optCityAll: "ሁሉም ከተሞች",
+        lblSubcity: "ክፍለ ከተማ / ቀበሌ",
+        lblPrice: "ከፍተኛ የዋጋ ወሰን",
+        fbNoticeTitle: "ቀጥታ ወደ ፌስቡክ የመላክ አገልግሎት",
+        fbNoticeDesc: "የሚጭኗቸው የቤት ምስሎች እና ቪዲዮዎች በቀጥታ ወደ ወኪሉ ኦፊሴላዊ የፌስቡክ አካውንት (Tesfaye Abate) ይጫናሉ።",
+        lblUploadMedia: "የቤት ምስሎችን ወይም ቪዲዮዎችን ይጫኑ",
+        lblCommissionAgree: "ቤትዎን ሲያስመዝግቡ የሽያጭ ወይም የኪራይ ውል ሲጠናቀቅ ከ 3% እስከ 5% (ተደራዳሪ) የወኪል ክፍያ ለመክፈል መስማማትዎን ያረጋግጣሉ።",
+        btnSubmitListing: "መረጃውን መዝግብ እና በቀጥታ ወደ ፌስቡክ (Tesfaye Abate) ላክ",
+        sectionTitle: "የሚገኙ የቤት ዝርዝሮች"
+      }
+    };
 
-            // 4. Lights
-            ambientLight = new THREE.AmbientLight(0x2a354b, 0.8);
-            scene.add(ambientLight);
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'am' : 'en';
+      const t = translations[currentLang];
+      
+      document.getElementById('banner-notice').innerText = t.banner;
+      document.getElementById('sub-logo').innerText = t.subLogo;
+      document.getElementById('nav-buy').innerText = t.navBuy;
+      document.getElementById('nav-rent').innerText = t.navRent;
+      document.getElementById('nav-sell').innerText = t.navSell;
+      document.getElementById('lang-indicator').innerText = t.langBtn;
+      document.getElementById('hero-title').innerText = t.heroTitle;
+      document.getElementById('hero-subtitle').innerText = t.heroSubtitle;
+      document.getElementById('tab-buy').innerText = t.tabBuy;
+      document.getElementById('tab-rent').innerText = t.tabRent;
+      document.getElementById('tab-sell').innerText = t.tabSell;
+      document.getElementById('lbl-house-type').innerText = t.lblType;
+      document.getElementById('opt-type-all').innerText = t.optTypeAll;
+      document.getElementById('opt-type-1').innerText = t.opt1;
+      document.getElementById('opt-type-2').innerText = t.opt2;
+      document.getElementById('opt-type-3').innerText = t.opt3;
+      document.getElementById('opt-type-4').innerText = t.opt4;
+      document.getElementById('opt-type-5').innerText = t.opt5;
+      document.getElementById('lbl-city').innerText = t.lblCity;
+      document.getElementById('opt-city-all').innerText = t.optCityAll;
+      document.getElementById('lbl-subcity').innerText = t.lblSubcity;
+      document.getElementById('lbl-price').innerText = t.lblPrice;
+      document.getElementById('fb-notice-title').innerText = t.fbNoticeTitle;
+      document.getElementById('fb-notice-desc').innerText = t.fbNoticeDesc;
+      document.getElementById('lbl-upload-media').innerText = t.lblUploadMedia;
+      document.getElementById('lbl-commission-agree').innerText = t.lblCommissionAgree;
+      document.getElementById('btn-submit-listing').innerText = t.btnSubmitListing;
+      document.getElementById('section-title').innerText = t.sectionTitle;
+    }
 
-            // Directional Twilight Sun Light
-            const dirLight = new THREE.DirectionalLight(0x90b0ff, 1.2);
-            dirLight.position.set(20, 30, -10);
-            dirLight.castShadow = true;
-            scene.add(dirLight);
+    function setTab(tab) {
+      const filterPanel = document.getElementById('filter-panel');
+      const sellerForm = document.getElementById('seller-form');
+      const btnBuy = document.getElementById('tab-buy');
+      const btnRent = document.getElementById('tab-rent');
+      const btnSell = document.getElementById('tab-sell');
 
-            // 5. Build Villa Mesh Group (White Cubic Architecture + Glass Balcony + LED accent strips)
-            villaGroup = new THREE.Group();
+      btnBuy.className = "py-3 px-6 font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-700 text-sm transition";
+      btnRent.className = "py-3 px-6 font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-700 text-sm transition";
+      btnSell.className = "py-3 px-6 font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-700 text-sm transition";
 
-            // Materials
-            const whitePlasterMat = new THREE.MeshStandardMaterial({ color: 0xF3F4F6, roughness: 0.2 });
-            const darkPanelMat = new THREE.MeshStandardMaterial({ color: 0x1E293B, roughness: 0.4 });
-            const glassMat = new THREE.MeshPhysicalMaterial({
-                color: 0xffffff,
-                transparent: true,
-                opacity: 0.3,
-                roughness: 0.1,
-                transmission: 0.9,
-                thickness: 0.5
-            });
-            const ledWarmMat = new THREE.MeshBasicMaterial({ color: 0xFFB800 }); // Glowing warm LED
-            const grassMat = new THREE.MeshStandardMaterial({ color: 0x152E20, roughness: 0.8 });
-            const drivewayMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.5 });
+      if (tab === 'sell') {
+        filterPanel.classList.add('hidden');
+        sellerForm.classList.remove('hidden');
+        btnSell.className = "py-3 px-6 font-semibold border-b-2 border-emerald-700 text-emerald-700 text-sm transition";
+      } else {
+        sellerForm.classList.add('hidden');
+        filterPanel.classList.remove('hidden');
+        if (tab === 'buy') btnBuy.className = "py-3 px-6 font-semibold border-b-2 border-emerald-700 text-emerald-700 text-sm transition";
+        if (tab === 'rent') btnRent.className = "py-3 px-6 font-semibold border-b-2 border-emerald-700 text-emerald-700 text-sm transition";
+      }
+    }
 
-            // Ground base & Driveway
-            const ground = new THREE.Mesh(new THREE.BoxGeometry(36, 0.5, 36), grassMat);
-            ground.position.y = -0.25;
-            ground.receiveShadow = true;
-            villaGroup.add(ground);
-
-            // Curved/Paved Driveway (Matching path in photo)
-            const driveway = new THREE.Mesh(new THREE.BoxGeometry(12, 0.05, 18), drivewayMat);
-            driveway.position.set(-4, 0.03, 9);
-            villaGroup.add(driveway);
-
-            // Main Lower Cubic Block
-            const lowerBlock = new THREE.Mesh(new THREE.BoxGeometry(14, 5, 10), whitePlasterMat);
-            lowerBlock.position.set(0, 2.5, 0);
-            lowerBlock.castShadow = true;
-            lowerBlock.receiveShadow = true;
-            villaGroup.add(lowerBlock);
-
-            // Garage Section (Left)
-            const garageBlock = new THREE.Mesh(new THREE.BoxGeometry(7, 4.2, 8), darkPanelMat);
-            garageBlock.position.set(-8.5, 2.1, 1);
-            villaGroup.add(garageBlock);
-
-            // Upper Cantilever Block (Modern Floating Floor)
-            const upperBlock = new THREE.Mesh(new THREE.BoxGeometry(16, 4.5, 11), whitePlasterMat);
-            upperBlock.position.set(-1, 7.25, 0.5);
-            upperBlock.castShadow = true;
-            villaGroup.add(upperBlock);
-
-            // Glass Balcony Railing (Front Terrace)
-            const railing = new THREE.Mesh(new THREE.BoxGeometry(12, 1.2, 0.1), glassMat);
-            railing.position.set(0, 9.8, 6.05);
-            villaGroup.add(railing);
-
-            // Glass Sliding Doors / Windows
-            const windowMain = new THREE.Mesh(new THREE.BoxGeometry(8, 3.8, 0.1), glassMat);
-            windowMain.position.set(0, 2.4, 5.06);
-            villaGroup.add(windowMain);
-
-            const windowUpper = new THREE.Mesh(new THREE.BoxGeometry(10, 3.2, 0.1), glassMat);
-            windowUpper.position.set(-1, 7.2, 6.06);
-            villaGroup.add(windowUpper);
-
-            // Warm LED Strip Edges (Inspired directly by user reference photo perimeter overhangs)
-            function createLEDStrip(x, y, z, w, h, d) {
-                const strip = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), ledWarmMat);
-                strip.position.set(x, y, z);
-                villaGroup.add(strip);
-
-                // Point Light for Glow Simulation
-                const pLight = new THREE.PointLight(0xFFB800, 1.5, 8);
-                pLight.position.set(x, y, z);
-                villaGroup.add(pLight);
-                ledLights.push(pLight);
-            }
-
-            // Roof & Balcony Overhang LED Strips
-            createLEDStrip(-1, 9.5, 6.1, 16.2, 0.1, 0.1); // Upper roof line
-            createLEDStrip(0, 5.0, 5.1, 14.2, 0.1, 0.1);  // Mid-floor balcony line
-            createLEDStrip(-8.5, 4.2, 5.0, 7.2, 0.1, 0.1); // Garage header line
-
-            // Sub-interior warm glow
-            const interiorLight = new THREE.PointLight(0xFFD080, 2.5, 15);
-            interiorLight.position.set(0, 3, 2);
-            villaGroup.add(interiorLight);
-            ledLights.push(interiorLight);
-
-            scene.add(villaGroup);
-
-            // 6. Mouse Interaction Dragging logic
-            container.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                previousMousePosition = { x: e.clientX, y: e.clientY };
-            });
-
-            container.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                const deltaX = e.clientX - previousMousePosition.x;
-                const deltaY = e.clientY - previousMousePosition.y;
-
-                villaGroup.rotation.y += deltaX * 0.008;
-                villaGroup.rotation.x = Math.max(-0.2, Math.min(0.4, villaGroup.rotation.x + deltaY * 0.005));
-
-                previousMousePosition = { x: e.clientX, y: e.clientY };
-            });
-
-            window.addEventListener('mouseup', () => { isDragging = false; });
-            container.addEventListener('mouseleave', () => { isDragging = false; });
-
-            // Touch support for mobile devices
-            container.addEventListener('touchstart', (e) => {
-                if(e.touches.length === 1) {
-                    isDragging = true;
-                    previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-                }
-            });
-
-            container.addEventListener('touchmove', (e) => {
-                if (!isDragging || e.touches.length !== 1) return;
-                const deltaX = e.touches[0].clientX - previousMousePosition.x;
-                const deltaY = e.touches[0].clientY - previousMousePosition.y;
-
-                villaGroup.rotation.y += deltaX * 0.008;
-                villaGroup.rotation.x = Math.max(-0.2, Math.min(0.4, villaGroup.rotation.x + deltaY * 0.005));
-
-                previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-            });
-
-            container.addEventListener('touchend', () => { isDragging = false; });
-
-            // Resize handling
-            window.addEventListener('resize', onWindowResize);
-
-            // Start Animation Loop
-            animate3D();
-        }
-
-        function animate3D() {
-            requestAnimationFrame(animate3D);
-
-            // Subtle auto orbit floating when not dragging
-            if (!isDragging) {
-                villaGroup.rotation.y += 0.0015;
-            }
-
-            renderer.render(scene, camera);
-        }
-
-        function onWindowResize() {
-            const container = document.getElementById('canvas-container');
-            if (!container) return;
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        }
-
-        function toggle3DLights() {
-            isLightsOn = !isLightsOn;
-            ledLights.forEach(light => {
-                light.intensity = isLightsOn ? 1.5 : 0.0;
-            });
-            document.getElementById('lightStatusText').innerText = isLightsOn ? "Lighting: Twilight Glow" : "Lighting: Day Mode";
-            ambientLight.intensity = isLightsOn ? 0.8 : 1.8;
-        }
+    function submitProperty() {
+      alert(currentLang === 'en' 
+        ? "Property successfully submitted! Video/Images are synchronizing directly to Facebook Account: Tesfaye Abate." 
+        : "የቤቱ መረጃ በተሳካ ሁኔታ ተመዝግቧል! ምስሎች እና ቪዲዮዎች በቀጥታ ወደ ፌስቡክ አካውንት (Tesfaye Abate) በመጫን ላይ ናቸው።");
+    }
+  </script>
+</body>
+</html>
